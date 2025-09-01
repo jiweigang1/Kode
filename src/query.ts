@@ -170,7 +170,7 @@ export async function* query(
 
   markPhase('QUERY_INIT')
 
-  // Auto-compact check
+  // Auto-compact check 检查是否需要压缩的时候，如果需要压缩就会进行压缩
   const { messages: processedMessages, wasCompacted } = await checkAutoCompact(
     messages,
     toolUseContext,
