@@ -33,6 +33,7 @@ import { debug as debugLogger } from '../../utils/debugLogger'
 import { getTaskTools, getPrompt } from './prompt'
 import { TOOL_NAME } from './constants'
 
+// tools的入参描述信息，这里的 prompt 是具体的任务，是大模型生成的
 const inputSchema = z.object({
   description: z
     .string()
@@ -46,6 +47,7 @@ const inputSchema = z.object({
     ),
 })
 
+//TaskTool  prompt 语句
 export const TaskTool = {
   async prompt({ safeMode }) {
     return await getPrompt(safeMode)
@@ -91,6 +93,7 @@ Usage: Provide detailed task description for autonomous execution. The agent wil
     },
   ) {
     const startTime = Date.now()
+    // 创建用户 prompt 语句，这个语句是从主上下文传递下来的 
     const messages: MessageType[] = [createUserMessage(prompt)]
     const tools = await getTaskTools(safeMode)
 
@@ -104,6 +107,7 @@ Usage: Provide detailed task description for autonomous execution. The agent wil
     }
 
     const [taskPrompt, context, maxThinkingTokens] = await Promise.all([
+      //系统上下文
       getAgentPrompt(),
       getContext(),
       getMaxThinkingTokens(messages),

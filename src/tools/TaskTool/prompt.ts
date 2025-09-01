@@ -15,7 +15,7 @@ export async function getTaskTools(safeMode: boolean): Promise<Tool[]> {
     _ => _.name !== TaskTool.name,
   )
 }
-
+//获取 tool 的描述信息
 export async function getPrompt(safeMode: boolean): Promise<string> {
   const tools = await getTaskTools(safeMode)
   const toolNames = tools.map(_ => _.name).join(', ')
