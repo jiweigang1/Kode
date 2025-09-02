@@ -180,7 +180,7 @@ export async function* query(
   }
 
   markPhase('SYSTEM_PROMPT_BUILD')
-  
+  //生成提醒上下文信息 
   const { systemPrompt: fullSystemPrompt, reminders } =
     formatSystemPromptWithContext(systemPrompt, context, toolUseContext.agentId)
 
@@ -192,6 +192,7 @@ export async function* query(
   })
 
   // Inject reminders into the latest user message
+  // 把 reminders 注入到“最后一条用户消息”的 content 前面,
   if (reminders && messages.length > 0) {
     // Find the last user message
     for (let i = messages.length - 1; i >= 0; i--) {
@@ -253,7 +254,8 @@ export async function* query(
 
   const assistantMessage = result.message
   const shouldSkipPermissionCheck = result.shouldSkipPermissionCheck
-
+  
+  //异步发送消息到外部调用
   yield assistantMessage
 
   // @see https://docs.anthropic.com/en/docs/build-with-claude/tool-use
@@ -262,7 +264,7 @@ export async function* query(
     _ => _.type === 'tool_use',
   )
 
-  // If there's no more tool use, we're done
+  // If there's no more tool use, we're done 如果没有工具调用，query 结束，也就不会再发送更多消息。
   if (!toolUseMessages.length) {
     return
   }
